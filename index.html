@@ -71,6 +71,20 @@
   }
 
   /* ---------- Section 1: the wish ---------- */
+  /* faded chessboard behind the opening page */
+  #wish{position:relative;}
+  #wish::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:-1;
+    background:repeating-conic-gradient(rgba(168,188,171,.05) 0% 25%, transparent 0% 50%);
+    background-size:110px 110px;
+    /* fade the board out towards the bottom and the sides */
+    -webkit-mask-image:radial-gradient(120% 90% at 50% 0%, #000 0%, transparent 75%);
+    mask-image:radial-gradient(120% 90% at 50% 0%, #000 0%, transparent 75%);
+    pointer-events:none;
+  }
   #wish h1{
     font-size:clamp(54px, 12vw, 148px);
     font-weight:900;
