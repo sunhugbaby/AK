@@ -19,14 +19,22 @@
     --brass-dim:#8a744a;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
-  html,body{height:100%;}
+  html,body{min-height:100%;}
   body{
-    background:
-      radial-gradient(1200px 700px at 70% -10%, #1a2e22 0%, transparent 60%),
-      var(--pine);
+    background:var(--pine);
     color:var(--bone);
     font-family:"Karla", sans-serif;
     overflow-x:hidden;
+  }
+  /* soft glow pinned to the viewport, so it fades smoothly no matter
+     how tall the page is or how far you scroll */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    background:radial-gradient(1200px 700px at 70% -10%, #1a2e22 0%, rgba(16,29,22,0) 60%);
+    pointer-events:none;
   }
   .display{font-family:"Fraunces", serif;}
   .mono{font-family:"IBM Plex Mono", monospace;}
@@ -163,6 +171,101 @@
 
   #particles{position:fixed;inset:0;pointer-events:none;z-index:50;}
 
+  /* ---------- music button ---------- */
+  .music{
+    position:fixed;
+    right:22px;bottom:22px;
+    z-index:60;
+    width:64px;height:64px;
+    border-radius:50%;
+    border:2px solid var(--brass);
+    background:var(--moss);
+    cursor:pointer;
+    padding:0;
+    overflow:hidden;
+    box-shadow:0 12px 30px rgba(0,0,0,.5);
+    transition:transform .2s, box-shadow .2s;
+  }
+  .music:hover, .music:focus-visible{transform:scale(1.08);box-shadow:0 16px 36px rgba(0,0,0,.6);}
+  .music:focus-visible{outline:2px solid var(--bone);outline-offset:3px;}
+  .music img{
+    width:100%;height:100%;object-fit:cover;display:block;border-radius:50%;
+  }
+  .music .disc-fallback{
+    position:absolute;inset:0;
+    display:flex;align-items:center;justify-content:center;
+    font-size:24px;color:var(--brass);
+    background:radial-gradient(circle at 50% 50%, var(--moss) 28%, #16261c 30%);
+  }
+  .music.playing{animation:spin 4s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .music .state{
+    position:absolute;inset:0;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(16,29,22,.45);
+    color:var(--bone);
+    font-size:20px;
+    opacity:1;
+    transition:opacity .2s;
+    border-radius:50%;
+  }
+  .music.playing .state{opacity:0;}
+  .music.playing:hover .state{opacity:1;}
+
+
+  /* ---------- baby reveal ---------- */
+  .baby{
+    display:none;
+    animation:babyPop .6s cubic-bezier(.2,1.4,.4,1) both;
+    position:relative;
+    width:min(300px, 74vw);
+    margin-bottom:34px;
+  }
+  .baby.show{display:block;}
+  .baby.leave{animation:babyLeave .5s ease both;}
+  @keyframes babyLeave{
+    from{opacity:1;transform:scale(1) rotate(-2deg);}
+    to{opacity:0;transform:scale(.6) rotate(4deg);}
+  }
+  @keyframes babyPop{
+    from{opacity:0;transform:scale(.5) rotate(-6deg);}
+    to{opacity:1;transform:scale(1) rotate(-2deg);}
+  }
+  .baby .sticker{
+    border:6px solid var(--bone);
+    border-radius:10px;
+    box-shadow:0 24px 60px rgba(0,0,0,.55);
+    background:var(--moss);
+    overflow:hidden;
+    transform:rotate(-2deg);
+  }
+  .baby .sticker img{width:100%;display:block;}
+  .baby .sticker .baby-fallback{
+    aspect-ratio:1/1;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:10px;color:var(--sage);
+  }
+  .baby .caption{
+    position:absolute;
+    left:50%;bottom:3%;
+    transform:translateX(-50%);
+    z-index:2;
+    color:#ffffff;
+    font-family:"IBM Plex Mono",monospace;
+    font-weight:500;
+    font-size:40px;
+    letter-spacing:.08em;
+    white-space:nowrap;
+  }
+  .baby .caption .wrong{
+    text-decoration:line-through;
+    text-decoration-thickness:2.5px;
+    text-decoration-color:#d84a3a;
+    color:rgba(255,255,255,.6);
+    margin-right:10px;
+  }
+  .baby .caption .right{color:#ffffff;}
+
+
   .voucher{
     display:none;
     animation:fadeUp .7s ease both;
@@ -276,7 +379,7 @@
          IMAGE_SOURCES list inside the <script> at the bottom.
          If a file is missing, a fallback graphic is shown instead.
          ========================================================== -->
-    <img id="kingImg" src="kendrick1.jpg" alt="" style="display:none;">
+    <img id="kingImg" src="kendrick1.webp" alt="" style="display:none;">
     <div class="fallback" id="fallback">
       <div class="big display" id="fallbackWord">okay.</div>
       <div class="mono" style="font-size:12px;letter-spacing:.2em;">[ kendrick1.jpg goes here ]</div>
@@ -286,6 +389,25 @@
 
   <div class="tap-dots" aria-hidden="true"><span></span><span></span><span></span></div>
   <p class="tap-hint" id="tapHint">Tap him. He can take it — he's been through five albums of worse.</p>
+
+  <!-- ==========================================================
+       BABY REVEAL — appears out of the explosion, before the code.
+       Put the baby photo next to this HTML file, named exactly:
+
+          baby.png
+
+       If the file is missing, a placeholder is shown instead.
+       ========================================================== -->
+  <div class="baby" id="baby">
+    <div class="caption">baby <span class="right">AK</span></div>
+    <div class="sticker">
+      <img id="babyImg" src="baby1.jpg" alt="AK as a baby" style="display:none;">
+      <div class="baby-fallback" id="babyFallback">
+        <div class="display" style="font-size:44px;color:var(--brass);">👶</div>
+        <div class="mono" style="font-size:12px;letter-spacing:.2em;">[ baby.png goes here ]</div>
+      </div>
+    </div>
+  </div>
 
   <div class="voucher" id="voucher">
     <div class="label">Checkmate · Gift unlocked</div>
@@ -300,7 +422,7 @@
   <div class="move-note mono">move three — the endgame</div>
   <div class="eyebrow">Opening theory · pick one line</div>
   <h2 class="display">Four ways to spend it.</h2>
-  <p class="lede">A voucher is just potential energy. Four lines, one per era — every one of them ends in a beautiful position.</p>
+  <p class="lede">A voucher is just potential energy. Four lines, four features — every one of them ends in a beautiful position.</p>
 
   <div class="cards">
     <a class="card" href="https://www.jochen-schweizer.de/wasser-wind/tauchkurs-see/p/w3q6b" target="_blank" rel="noopener">
@@ -311,9 +433,9 @@
     </a>
 
     <a class="card" href="https://www.jochen-schweizer.de/fliegen-fallen/gleitschirm-kurs/p/8s25e" target="_blank" rel="noopener">
-      <div class="era-tag">Butterfly era · pimp the thermals</div>
+      <div class="era-tag">Tyler era · Call Me If You Get Lost</div>
       <h3>Paragliding course</h3>
-      <p>Sometimes the best perspective on the board is from above it. Catch a current and look down on everything for once.</p>
+      <p>Sometimes the best perspective on the board is from above it. Catch a current, stamp the passport of the sky, and look down on everything for once.</p>
       <span class="go">Take off →</span>
     </a>
 
@@ -325,9 +447,9 @@
     </a>
 
     <a class="card" href="https://www.jochen-schweizer.de/abenteuer-sport/sportschuetze/p/dou5i" target="_blank" rel="noopener">
-      <div class="era-tag">GNX era · lock in</div>
+      <div class="era-tag">Baby Keem era · Range Brothers</div>
       <h3>Sport shooting</h3>
-      <p>Steady hands, calm mind, total precision — the same skills that win endgames, transferred to the range.</p>
+      <p>Steady hands, calm mind, total precision — the same skills that win endgames, transferred to the range. Keem and Dot would approve.</p>
       <span class="go">Lock in →</span>
     </a>
   </div>
@@ -339,6 +461,25 @@
   <div class="ak-mono">A·K</div>
   With love, from your team. Good game — better year ahead.
 </footer>
+
+<!-- ==========================================================
+     MUSIC PLAYER — floating circular button, bottom-right.
+     Put two files next to this HTML file, named exactly:
+
+        song.mp3      (the track that plays)
+        vinyl.png     (small Kendrick image shown inside the circle)
+
+     Other formats work too — just change the filenames in the
+     MUSIC config right below in the <script>.
+     Note: browsers block autoplay, so the song starts on the
+     first click of the button (it spins while playing).
+     ========================================================== -->
+<button class="music" id="musicBtn" aria-label="Play song">
+  <img id="musicImg" src="vinyl.png" alt="" style="display:none;">
+  <div class="disc-fallback" id="musicFallback">♪</div>
+  <div class="state" id="musicState">▶</div>
+</button>
+<audio id="song" src="song.mp3" loop preload="auto"></audio>
 
 <canvas id="particles"></canvas>
 
@@ -358,7 +499,7 @@
      THE THREE IMAGES — edit filenames here if yours differ.
      Image [0] is shown first; [1] after tap one; [2] after tap two.
      ============================================================= */
-  const IMAGE_SOURCES = ['kendrick1.jpg', 'kendrick2.jpg', 'kendrick3.jpg'];
+  const IMAGE_SOURCES = ['kendrick1.webp', 'kendrick2.jpeg', 'kendrick3.jpg'];
 
   const frame = document.getElementById('frame');
   const img = document.getElementById('kingImg');
@@ -414,9 +555,56 @@
     setTimeout(()=>{
       frame.style.display='none';
       document.querySelector('.tap-dots').style.display='none';
-      document.getElementById('voucher').classList.add('show');
-    }, 700);
+      hint.style.display='none';
+      document.getElementById('baby').classList.add('show');   // baby appears out of the blast
+    }, 650);
+    setTimeout(()=>{
+      document.getElementById('baby').classList.add('leave');  // after 2s the baby shrinks away…
+    }, 650 + 2000);
+    setTimeout(()=>{
+      document.getElementById('baby').style.display='none';
+      document.getElementById('voucher').classList.add('show'); // …and the code takes its place
+    }, 650 + 2000 + 500);
   }
+
+  // load baby.png if it exists, otherwise keep the placeholder
+  (function(){
+    const b = document.getElementById('babyImg');
+    const test = new Image();
+    test.onload = ()=>{ b.style.display='block'; document.getElementById('babyFallback').style.display='none'; };
+    test.src = 'baby1.jpg';   // must match the babyImg src above
+  })();
+
+  /* ---- music button ---- */
+  const MUSIC = { track:'song.mp3', image:'vinyl.jpg' };   // ← edit filenames here if needed
+  const song = document.getElementById('song');
+  const musicBtn = document.getElementById('musicBtn');
+  const musicState = document.getElementById('musicState');
+  song.src = MUSIC.track;
+
+  (function(){
+    const m = document.getElementById('musicImg');
+    const test = new Image();
+    test.onload = ()=>{ m.src = MUSIC.image; m.style.display='block'; document.getElementById('musicFallback').style.display='none'; };
+    test.src = MUSIC.image;
+  })();
+
+  musicBtn.addEventListener('click', ()=>{
+    if(song.paused){
+      song.play().then(()=>{
+        musicBtn.classList.add('playing');
+        musicState.textContent = '❚❚';
+        musicBtn.setAttribute('aria-label','Pause song');
+      }).catch(()=>{
+        musicState.textContent = '✕';   // file missing or blocked
+      });
+    } else {
+      song.pause();
+      musicBtn.classList.remove('playing');
+      musicState.textContent = '▶';
+      musicBtn.setAttribute('aria-label','Play song');
+    }
+  });
 
   /* ---- particle burst ---- */
   const canvas = document.getElementById('particles');
