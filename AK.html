@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAPPY 23RD, AK.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,900&family=Karla:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Mr. Morale-inspired muted green palette */
+    --pine:#101d16;        /* page background — near-black green */
+    --moss:#1b2f24;        /* surfaces */
+    --moss-line:#2c4433;   /* borders */
+    --sage:#a8bcab;        /* secondary text */
+    --bone:#efe8d8;        /* primary text */
+    --brass:#c2a15c;       /* accent */
+    --brass-dim:#8a744a;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    background:
+      radial-gradient(1200px 700px at 70% -10%, #1a2e22 0%, transparent 60%),
+      var(--pine);
+    color:var(--bone);
+    font-family:"Karla", sans-serif;
+    overflow-x:hidden;
+  }
+  .display{font-family:"Fraunces", serif;}
+  .mono{font-family:"IBM Plex Mono", monospace;}
+
+  section{
+    min-height:100vh;
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:56px 24px;
+    text-align:center;
+  }
+  section.active{display:flex;}
+  section.reveal{animation:fadeUp .8s ease both;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:none;}}
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.01ms !important; transition-duration:.01ms !important;}
+  }
+
+  .move-note{
+    font-size:12px;
+    color:var(--brass-dim);
+    letter-spacing:.22em;
+    margin-bottom:14px;
+    text-transform:uppercase;
+  }
+  .eyebrow{
+    letter-spacing:.34em;
+    text-transform:uppercase;
+    font-size:11px;
+    color:var(--brass);
+    margin-bottom:22px;
+  }
+
+  /* ---------- Section 1: the wish ---------- */
+  #wish h1{
+    font-size:clamp(54px, 12vw, 148px);
+    font-weight:900;
+    line-height:.96;
+    letter-spacing:-.015em;
+  }
+  #wish h1 .ak{color:var(--brass);font-style:italic;}
+  #wish .sub{
+    margin-top:30px;
+    max-width:580px;
+    font-size:17px;
+    line-height:1.75;
+    color:var(--sage);
+  }
+  #wish .quote{
+    margin-top:36px;
+    font-size:19px;
+    color:var(--bone);
+    max-width:520px;
+    line-height:1.6;
+    font-style:italic;
+    font-weight:400;
+  }
+  #wish .quote small{
+    display:block;margin-top:10px;font-style:normal;
+    font-family:"IBM Plex Mono",monospace;font-size:11px;
+    letter-spacing:.2em;color:var(--brass-dim);text-transform:uppercase;
+  }
+
+
+  .btn{
+    margin-top:46px;
+    padding:16px 44px;
+    background:transparent;
+    border:1px solid var(--brass);
+    color:var(--brass);
+    font-size:13px;
+    letter-spacing:.28em;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:background .25s, color .25s, transform .15s;
+    font-family:"Karla",sans-serif;
+    font-weight:700;
+  }
+  .btn:hover, .btn:focus-visible{background:var(--brass);color:var(--pine);transform:translateY(-2px);}
+  .btn:focus-visible{outline:2px solid var(--bone);outline-offset:3px;}
+
+  /* ---------- Section 2: tap stage ---------- */
+  #tap .frame{
+    position:relative;
+    width:min(340px, 82vw);
+    aspect-ratio:1/1;
+    border:1px solid var(--moss-line);
+    outline:1px solid var(--brass-dim);
+    outline-offset:8px;
+    background:var(--moss);
+    box-shadow:0 30px 70px rgba(0,0,0,.5);
+    cursor:pointer;
+    user-select:none;
+    -webkit-user-select:none;
+    -webkit-tap-highlight-color:transparent;
+    overflow:hidden;
+  }
+  #tap .frame img{
+    width:100%;height:100%;object-fit:cover;display:block;
+    filter:grayscale(1) contrast(1.05);
+  }
+  #tap .frame .fallback{
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+    color:var(--sage);
+  }
+  #tap .frame .fallback .big{
+    font-family:"Fraunces",serif;font-size:64px;font-weight:900;color:var(--brass);
+  }
+  #tap .frame.shake{animation:shake .35s;}
+  @keyframes shake{
+    0%,100%{transform:translateX(0) rotate(0);}
+    25%{transform:translateX(-9px) rotate(-1.3deg);}
+    75%{transform:translateX(9px) rotate(1.3deg);}
+  }
+  #tap .frame.gone{visibility:hidden;}
+  .tap-hint{
+    margin-top:26px;
+    font-size:15px;
+    color:var(--sage);
+    letter-spacing:.04em;
+    min-height:1.4em;
+    max-width:420px;
+    line-height:1.5;
+  }
+  .tap-dots{display:flex;gap:12px;margin-top:16px;justify-content:center;}
+  .tap-dots span{
+    width:10px;height:10px;border:1px solid var(--brass);border-radius:50%;
+    transition:background .2s;
+  }
+  .tap-dots span.hit{background:var(--brass);}
+
+  #particles{position:fixed;inset:0;pointer-events:none;z-index:50;}
+
+  .voucher{
+    display:none;
+    animation:fadeUp .7s ease both;
+    border:1px dashed var(--brass);
+    background:var(--moss);
+    padding:38px 44px;
+    max-width:440px;
+  }
+  .voucher.show{display:block;}
+  .voucher .label{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--sage);}
+  .voucher .code{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:clamp(26px, 7vw, 38px);
+    color:var(--brass);
+    letter-spacing:.12em;
+    margin:16px 0;
+    font-weight:500;
+  }
+  .voucher p{font-size:14px;color:var(--sage);line-height:1.65;}
+
+  /* ---------- Section 3: ideas ---------- */
+  #ideas h2{
+    font-size:clamp(36px, 6vw, 58px);
+    font-weight:900;
+    margin-bottom:10px;
+    letter-spacing:-.01em;
+  }
+  #ideas .lede{color:var(--sage);max-width:540px;margin:0 auto 44px;line-height:1.7;font-size:16px;}
+  .cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));
+    gap:18px;
+    width:min(1060px, 100%);
+  }
+  .card{
+    background:var(--moss);
+    border:1px solid var(--moss-line);
+    padding:30px 26px 26px;
+    text-align:left;
+    text-decoration:none;
+    color:var(--bone);
+    display:flex;flex-direction:column;gap:12px;
+    transition:transform .2s, border-color .2s, box-shadow .2s;
+  }
+  .card:hover, .card:focus-visible{
+    transform:translateY(-6px);
+    border-color:var(--brass);
+    box-shadow:0 20px 44px rgba(0,0,0,.45);
+  }
+  .card .era-tag{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:10px;color:var(--brass);letter-spacing:.2em;text-transform:uppercase;
+  }
+  .card h3{font-family:"Fraunces",serif;font-size:24px;font-weight:600;}
+  .card p{font-size:14px;color:var(--sage);line-height:1.65;flex-grow:1;}
+  .card .go{
+    font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--brass);font-weight:700;
+  }
+
+
+  footer{
+    padding:40px 20px 64px;
+    text-align:center;
+    color:var(--sage);
+    font-size:13px;
+    letter-spacing:.08em;
+    display:none;
+  }
+  footer.active{display:block;}
+  footer .ak-mono{
+    font-family:"Fraunces",serif;font-style:italic;
+    font-size:30px;color:var(--brass);letter-spacing:.18em;margin-bottom:10px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 1 · THE WISH ============ -->
+<section id="wish" class="active reveal">
+  <div class="move-note mono">move one — white opens</div>
+  <div class="eyebrow">A birthday in three moves</div>
+  <h1 class="display">Happy 23rd,<br><span class="ak">AK.</span></h1>
+  <p class="sub">
+    Twenty-three years of thinking two moves ahead — on the board, on the court,
+    and everywhere in between. This year the position is winning.
+    All you have to do is play it out.
+  </p>
+  <p class="quote display">
+    Take off the mask, take a breath, take a bow —<br>and then take your gift.
+    <small>somewhere between N95 and Count Me Out</small>
+  </p>
+
+  <button class="btn" onclick="goTo('tap')">Your move →</button>
+</section>
+
+<!-- ============ 2 · TAP STAGE ============ -->
+<section id="tap">
+  <div class="move-note mono">move two — the tension builds</div>
+  <div class="eyebrow">Three taps to checkmate</div>
+
+  <div class="frame" id="frame" role="button" tabindex="0" aria-label="Tap three times to reveal your gift">
+    <!-- ==========================================================
+         ADD YOUR THREE KENDRICK IMAGES HERE.
+         Put three files next to this HTML file, named exactly:
+
+            kendrick1.jpg   (shown first)
+            kendrick2.jpg   (shown after the 1st tap)
+            kendrick3.jpg   (shown after the 2nd tap — this one explodes)
+
+         .png also works: just change the extensions in the
+         IMAGE_SOURCES list inside the <script> at the bottom.
+         If a file is missing, a fallback graphic is shown instead.
+         ========================================================== -->
+    <img id="kingImg" src="kendrick1.jpg" alt="" style="display:none;">
+    <div class="fallback" id="fallback">
+      <div class="big display" id="fallbackWord">okay.</div>
+      <div class="mono" style="font-size:12px;letter-spacing:.2em;">[ kendrick1.jpg goes here ]</div>
+      <div class="mono" style="font-size:11px;color:var(--brass-dim);">tap me anyway</div>
+    </div>
+  </div>
+
+  <div class="tap-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+  <p class="tap-hint" id="tapHint">Tap him. He can take it — he's been through five albums of worse.</p>
+
+  <div class="voucher" id="voucher">
+    <div class="label">Checkmate · Gift unlocked</div>
+    <div class="code">AK-23-KING</div>
+    <p>One Jochen-Schweizer voucher, redeemable for whichever adventure you pick next. Scroll on for the opening theory.</p>
+    <button class="btn" onclick="goTo('ideas')" style="margin-top:26px;">See your options →</button>
+  </div>
+</section>
+
+<!-- ============ 3 · THE FOUR LINES ============ -->
+<section id="ideas">
+  <div class="move-note mono">move three — the endgame</div>
+  <div class="eyebrow">Opening theory · pick one line</div>
+  <h2 class="display">Four ways to spend it.</h2>
+  <p class="lede">A voucher is just potential energy. Four lines, one per era — every one of them ends in a beautiful position.</p>
+
+  <div class="cards">
+    <a class="card" href="https://www.jochen-schweizer.de/wasser-wind/tauchkurs-see/p/w3q6b" target="_blank" rel="noopener">
+      <div class="era-tag">good kid era · Swimming Pools, certified</div>
+      <h3>Diving course</h3>
+      <p>Deep thinker, meet deep water. Learn to breathe below the surface — the quietest place on earth to plan your next move.</p>
+      <span class="go">Dive in →</span>
+    </a>
+
+    <a class="card" href="https://www.jochen-schweizer.de/fliegen-fallen/gleitschirm-kurs/p/8s25e" target="_blank" rel="noopener">
+      <div class="era-tag">Butterfly era · pimp the thermals</div>
+      <h3>Paragliding course</h3>
+      <p>Sometimes the best perspective on the board is from above it. Catch a current and look down on everything for once.</p>
+      <span class="go">Take off →</span>
+    </a>
+
+    <a class="card" href="https://www.jochen-schweizer.de/abenteuer-sport/bogenschiessen/p/3w5vo" target="_blank" rel="noopener">
+      <div class="era-tag">Big Steppers era · quiet focus</div>
+      <h3>Bogenschießen</h3>
+      <p>Stillness, breath, release. The most meditative thing you can do with a projectile — therapy, but with arrows.</p>
+      <span class="go">Draw the bow →</span>
+    </a>
+
+    <a class="card" href="https://www.jochen-schweizer.de/abenteuer-sport/sportschuetze/p/dou5i" target="_blank" rel="noopener">
+      <div class="era-tag">GNX era · lock in</div>
+      <h3>Sport shooting</h3>
+      <p>Steady hands, calm mind, total precision — the same skills that win endgames, transferred to the range.</p>
+      <span class="go">Lock in →</span>
+    </a>
+  </div>
+
+  <button class="btn" onclick="goTo('wish')" style="margin-top:46px;">↺ Replay from move one</button>
+</section>
+
+<footer id="footer">
+  <div class="ak-mono">A·K</div>
+  With love, from your team. Good game — better year ahead.
+</footer>
+
+<canvas id="particles"></canvas>
+
+<script>
+  const sections = ['wish','tap','ideas'];
+  function goTo(id){
+    sections.forEach(s=>{
+      const el = document.getElementById(s);
+      el.classList.toggle('active', s===id);
+      el.classList.toggle('reveal', s===id);
+    });
+    document.getElementById('footer').classList.toggle('active', id==='ideas');
+    window.scrollTo({top:0, behavior:'instant'});
+  }
+
+  /* =============================================================
+     THE THREE IMAGES — edit filenames here if yours differ.
+     Image [0] is shown first; [1] after tap one; [2] after tap two.
+     ============================================================= */
+  const IMAGE_SOURCES = ['kendrick1.jpg', 'kendrick2.jpg', 'kendrick3.jpg'];
+
+  const frame = document.getElementById('frame');
+  const img = document.getElementById('kingImg');
+  const fallback = document.getElementById('fallback');
+  const fallbackWord = document.getElementById('fallbackWord');
+  const dots = document.querySelectorAll('.tap-dots span');
+  const hint = document.getElementById('tapHint');
+
+  const hints = [
+    'Tap him. He can take it — he\u2019s been through five albums of worse.',
+    'One. Still smiling. The man survived a beef, he\u2019ll survive you.',
+    'Two. The composure is cracking. One more.',
+  ];
+  const fallbackWords = ['okay.', 'hm.', 'DAMN.'];
+
+  let taps = 0;
+
+  // try to load an image; if it fails, show the fallback
+  function setImage(i){
+    img.style.display = 'none';
+    fallback.style.display = 'flex';
+    fallbackWord.textContent = fallbackWords[i];
+    fallback.querySelector('.mono').textContent = '[ ' + IMAGE_SOURCES[i] + ' goes here ]';
+    const test = new Image();
+    test.onload = ()=>{ img.src = IMAGE_SOURCES[i]; img.style.display='block'; fallback.style.display='none'; };
+    test.src = IMAGE_SOURCES[i];
+  }
+  setImage(0);
+
+  frame.addEventListener('click', hitKing);
+  frame.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();hitKing();} });
+
+  function hitKing(){
+    if(taps>=3) return;
+    taps++;
+    dots[taps-1].classList.add('hit');
+    if(taps<3){
+      frame.classList.remove('shake');
+      void frame.offsetWidth;
+      frame.classList.add('shake');
+      hint.textContent = hints[taps];
+      setImage(taps);          // swap to the next image
+    } else {
+      explode();
+    }
+  }
+
+  function explode(){
+    const rect = frame.getBoundingClientRect();
+    frame.classList.add('gone');
+    hint.textContent = 'CHECKMATE.';
+    burst(rect);
+    setTimeout(()=>{
+      frame.style.display='none';
+      document.querySelector('.tap-dots').style.display='none';
+      document.getElementById('voucher').classList.add('show');
+    }, 700);
+  }
+
+  /* ---- particle burst ---- */
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  function sizeCanvas(){canvas.width=innerWidth;canvas.height=innerHeight;}
+  sizeCanvas();
+  addEventListener('resize', sizeCanvas);
+
+  function burst(rect){
+    const cx = rect.left + rect.width/2;
+    const cy = rect.top + rect.height/2;
+    const colors = ['#c2a15c','#efe8d8','#a8bcab','#2c4433','#f2c937'];
+    const parts = [];
+    for(let i=0;i<160;i++){
+      const a = Math.random()*Math.PI*2;
+      const sp = 3 + Math.random()*11;
+      parts.push({
+        x: cx + (Math.random()-.5)*rect.width*.6,
+        y: cy + (Math.random()-.5)*rect.height*.6,
+        vx: Math.cos(a)*sp,
+        vy: Math.sin(a)*sp - 3,
+        s: 4 + Math.random()*9,
+        c: colors[(Math.random()*colors.length)|0],
+        r: Math.random()*Math.PI,
+        vr: (Math.random()-.5)*.3,
+        life: 1
+      });
+    }
+    let t0 = performance.now();
+    function step(t){
+      const done = (t - t0) > 1800;
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      parts.forEach(p=>{
+        p.x+=p.vx; p.y+=p.vy; p.vy+=.25; p.r+=p.vr; p.life-=.008;
+        if(p.life<=0) return;
+        ctx.save();
+        ctx.globalAlpha = Math.max(p.life,0);
+        ctx.translate(p.x,p.y);
+        ctx.rotate(p.r);
+        ctx.fillStyle = p.c;
+        ctx.fillRect(-p.s/2,-p.s/2,p.s,p.s);
+        ctx.restore();
+      });
+      if(!done) requestAnimationFrame(step);
+      else ctx.clearRect(0,0,canvas.width,canvas.height);
+    }
+    requestAnimationFrame(step);
+  }
+</script>
+</body>
+</html>
