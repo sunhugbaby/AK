@@ -73,7 +73,7 @@
 
   /* ---------- Section 1: the wish ---------- */
   /* faded chessboard behind the opening page */
-  #wish{position:relative;}
+  #wish{position:relative;justify-content:flex-start;}
   #wish::before{
     content:"";
     position:absolute;
@@ -125,6 +125,7 @@
     font-size:13px;
     letter-spacing:.28em;
     text-transform:uppercase;
+    white-space:nowrap;
     cursor:pointer;
     transition:background .25s, color .25s, transform .15s;
     font-family:"Karla",sans-serif;
@@ -132,6 +133,9 @@
   }
   .btn:hover, .btn:focus-visible{background:var(--brass);color:var(--pine);transform:translateY(-2px);}
   .btn:focus-visible{outline:2px solid var(--bone);outline-offset:3px;}
+  @media (max-width:480px){
+    .btn{padding:16px 22px;letter-spacing:.16em;}
+  }
 
   /* ---------- Section 2: tap stage ---------- */
   #tap .frame{
@@ -277,6 +281,9 @@
     padding:38px 44px;
     max-width:440px;
   }
+  @media (max-width:480px){
+    .voucher{padding:30px 24px;}
+  }
   .voucher.show{display:block;}
   .voucher .label{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--sage);}
   .voucher .code{
@@ -391,7 +398,7 @@
   </div>
 
   <div class="tap-dots" aria-hidden="true"><span></span><span></span><span></span></div>
-  <p class="tap-hint" id="tapHint">Tap him. He can take it — he's been through five albums of worse.</p>
+  <p class="tap-hint" id="tapHint">Tap him. He can take it — he's been through six albums of worse.</p>
 
   <!-- ==========================================================
        BABY REVEAL — appears out of the explosion, before the code.
@@ -414,7 +421,7 @@
 
   <div class="voucher" id="voucher">
     <div class="label">Checkmate · Gift unlocked</div>
-    <div class="code">AK-23-KING</div>
+    <div class="code">REMOVED</div>
     <p>One Jochen-Schweizer voucher, redeemable for whichever adventure you pick next. Scroll on for the opening theory.</p>
     <button class="btn" onclick="goTo('ideas')" style="margin-top:26px;">See your options →</button>
   </div>
@@ -452,7 +459,7 @@
       <div class="era-tag">Baby Keem era · Range Brothers</div>
       <h3>Sport shooting</h3>
       <p>Steady hands, calm mind, total precision — the same skills that win endgames, transferred to the range. Keem and Dot would approve.</p>
-      <span class="go">Lock in →</span>
+      <span class="go">Loc in →</span>
     </a>
   </div>
 
@@ -527,7 +534,6 @@
     img.style.display = 'none';
     fallback.style.display = 'flex';
     fallbackWord.textContent = fallbackWords[i];
-    fallback.querySelector('.mono').textContent = '[ ' + IMAGE_SOURCES[i] + ' goes here ]';
     const test = new Image();
     test.onload = ()=>{ img.src = IMAGE_SOURCES[i]; img.style.display='block'; fallback.style.display='none'; };
     test.src = IMAGE_SOURCES[i];
