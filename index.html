@@ -266,9 +266,11 @@
     color:#ffffff;
     font-family:"IBM Plex Mono",monospace;
     font-weight:500;
-    font-size:clamp(22px, 8vw, 40px);
+    font-size:clamp(15px, 4.5vw, 22px);
+    line-height:1.35;
     letter-spacing:.08em;
     white-space:nowrap;
+    text-align:center;
   }
   .baby .caption .right{color:#ffffff;}
 
@@ -398,7 +400,7 @@
   </div>
 
   <div class="tap-dots" aria-hidden="true"><span></span><span></span><span></span></div>
-  <p class="tap-hint" id="tapHint">Tap him. He can take it — he's been through six albums of worse.</p>
+  <p class="tap-hint" id="tapHint">Tap him. He can take it — he's been through six albums, after all.</p>
 
   <!-- ==========================================================
        BABY REVEAL — appears out of the explosion, before the code.
@@ -409,7 +411,7 @@
        If the file is missing, a placeholder is shown instead.
        ========================================================== -->
   <div class="baby" id="baby">
-    <div class="caption">baby <span class="right">AK</span></div>
+    <div class="caption">baby <span class="right">AK,</span><br>not Baby Keem</div>
     <div class="sticker">
       <img id="babyImg" src="baby1.jpg" alt="AK as a baby" style="display:none;">
       <div class="baby-fallback" id="babyFallback">
@@ -521,7 +523,6 @@
   const hint = document.getElementById('tapHint');
 
   const hints = [
-    'Tap him. He can take it — he\u2019s been through five albums of worse.',
     'One. Still smiling. The man survived a beef, he\u2019ll survive you.',
     'Two. The composure is cracking. One more.',
   ];
@@ -551,7 +552,7 @@
       frame.classList.remove('shake');
       void frame.offsetWidth;
       frame.classList.add('shake');
-      hint.textContent = hints[taps];
+      hint.textContent = hints[taps-1];
       setImage(taps);          // swap to the next image
     } else {
       explode();
