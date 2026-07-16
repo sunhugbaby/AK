@@ -17,8 +17,13 @@
     --bone:#efe8d8;        /* primary text */
     --brass:#c2a15c;       /* accent */
     --brass-dim:#8a744a;
+    --spark:#f2c937;       /* confetti highlight, burst only */
   }
   *{margin:0;padding:0;box-sizing:border-box;}
+  .sr-only{
+    position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+    overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+  }
   html,body{min-height:100%;}
   body{
     background:var(--pine);
@@ -57,17 +62,13 @@
 
   .move-note{
     font-size:12px;
-    color:var(--brass-dim);
+    color:var(--brass);
     letter-spacing:.22em;
-    margin-bottom:14px;
+    margin-bottom:22px;
     text-transform:uppercase;
   }
-  .eyebrow{
-    letter-spacing:.34em;
-    text-transform:uppercase;
-    font-size:11px;
-    color:var(--brass);
-    margin-bottom:22px;
+  @media (max-width:420px){
+    .move-note{letter-spacing:.12em;}
   }
 
   /* ---------- Section 1: the wish ---------- */
@@ -86,7 +87,7 @@
     pointer-events:none;
   }
   #wish h1{
-    font-size:clamp(54px, 12vw, 148px);
+    font-size:clamp(50px, 10vw, 104px);
     font-weight:900;
     line-height:.96;
     letter-spacing:-.015em;
@@ -111,7 +112,7 @@
   #wish .quote small{
     display:block;margin-top:10px;font-style:normal;
     font-family:"IBM Plex Mono",monospace;font-size:11px;
-    letter-spacing:.2em;color:var(--brass-dim);text-transform:uppercase;
+    letter-spacing:.2em;color:var(--brass);text-transform:uppercase;
   }
 
 
@@ -188,7 +189,8 @@
   /* ---------- music button ---------- */
   .music{
     position:fixed;
-    right:22px;bottom:22px;
+    left:50%;bottom:22px;
+    transform:translateX(-50%);
     z-index:60;
     width:64px;height:64px;
     border-radius:50%;
@@ -200,7 +202,7 @@
     box-shadow:0 12px 30px rgba(0,0,0,.5);
     transition:transform .2s, box-shadow .2s;
   }
-  .music:hover, .music:focus-visible{transform:scale(1.08);box-shadow:0 16px 36px rgba(0,0,0,.6);}
+  .music:hover, .music:focus-visible{transform:translateX(-50%) scale(1.08);box-shadow:0 16px 36px rgba(0,0,0,.6);}
   .music:focus-visible{outline:2px solid var(--bone);outline-offset:3px;}
   .music img{
     width:100%;height:100%;object-fit:cover;display:block;border-radius:50%;
@@ -260,16 +262,9 @@
     color:#ffffff;
     font-family:"IBM Plex Mono",monospace;
     font-weight:500;
-    font-size:40px;
+    font-size:clamp(22px, 8vw, 40px);
     letter-spacing:.08em;
     white-space:nowrap;
-  }
-  .baby .caption .wrong{
-    text-decoration:line-through;
-    text-decoration-thickness:2.5px;
-    text-decoration-color:#d84a3a;
-    color:rgba(255,255,255,.6);
-    margin-right:10px;
   }
   .baby .caption .right{color:#ffffff;}
 
@@ -351,10 +346,11 @@
 </head>
 <body>
 
+<main>
+
 <!-- ============ 1 · THE WISH ============ -->
 <section id="wish" class="active reveal">
   <div class="move-note mono">move one — white opens</div>
-  <div class="eyebrow">A birthday in three moves</div>
   <h1 class="display">Happy 23rd,<br><span class="ak">AK.</span></h1>
   <p class="sub">
     Twenty-three years of thinking two moves ahead — on the board, on the court,
@@ -371,8 +367,8 @@
 
 <!-- ============ 2 · TAP STAGE ============ -->
 <section id="tap">
+  <h2 class="sr-only">Tap to reveal your gift</h2>
   <div class="move-note mono">move two — the tension builds</div>
-  <div class="eyebrow">Three taps to checkmate</div>
 
   <div class="frame" id="frame" role="button" tabindex="0" aria-label="Tap three times to reveal your gift">
     <!-- ==========================================================
@@ -390,8 +386,7 @@
     <img id="kingImg" src="kendrick1.webp" alt="" style="display:none;">
     <div class="fallback" id="fallback">
       <div class="big display" id="fallbackWord">okay.</div>
-      <div class="mono" style="font-size:12px;letter-spacing:.2em;">[ kendrick1.jpg goes here ]</div>
-      <div class="mono" style="font-size:11px;color:var(--brass-dim);">tap me anyway</div>
+      <div class="mono" style="font-size:11px;color:var(--brass);">tap me anyway</div>
     </div>
   </div>
 
@@ -428,7 +423,6 @@
 <!-- ============ 3 · THE FOUR LINES ============ -->
 <section id="ideas">
   <div class="move-note mono">move three — the endgame</div>
-  <div class="eyebrow">Opening theory · pick one line</div>
   <h2 class="display">Four ways to spend it.</h2>
   <p class="lede">A voucher is just potential energy. Four lines, four features — every one of them ends in a beautiful position.</p>
 
@@ -449,7 +443,7 @@
 
     <a class="card" href="https://www.jochen-schweizer.de/abenteuer-sport/bogenschiessen/p/3w5vo" target="_blank" rel="noopener">
       <div class="era-tag">Big Steppers era · quiet focus</div>
-      <h3>Bogenschießen</h3>
+      <h3>Archery</h3>
       <p>Stillness, breath, release. The most meditative thing you can do with a projectile — therapy, but with arrows.</p>
       <span class="go">Draw the bow →</span>
     </a>
@@ -464,6 +458,8 @@
 
   <button class="btn" onclick="goTo('wish')" style="margin-top:46px;">↺ Replay from move one</button>
 </section>
+
+</main>
 
 <footer id="footer">
   <div class="ak-mono">A·K</div>
@@ -488,9 +484,9 @@
     <div class="disc-fallback" id="musicFallback">♪</div>
   </div>
 </button>
-<audio id="song" src="song.mp3" loop preload="auto"></audio>
+<audio id="song" src="song.mp3" loop preload="none"></audio>
 
-<canvas id="particles"></canvas>
+<canvas id="particles" aria-hidden="true"></canvas>
 
 <script>
   const sections = ['wish','tap','ideas'];
@@ -620,9 +616,12 @@
   addEventListener('resize', sizeCanvas);
 
   function burst(rect){
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const cx = rect.left + rect.width/2;
     const cy = rect.top + rect.height/2;
-    const colors = ['#c2a15c','#efe8d8','#a8bcab','#2c4433','#f2c937'];
+    const rootStyle = getComputedStyle(document.documentElement);
+    const colors = ['--brass','--bone','--sage','--moss-line','--spark']
+      .map(v => rootStyle.getPropertyValue(v).trim());
     const parts = [];
     for(let i=0;i<160;i++){
       const a = Math.random()*Math.PI*2;
