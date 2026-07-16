@@ -52,7 +52,7 @@
   section.reveal{animation:fadeUp .8s ease both;}
   @keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:none;}}
   @media (prefers-reduced-motion: reduce){
-    *{animation-duration:.01ms !important; transition-duration:.01ms !important;}
+    *:not(.music .art){animation-duration:.01ms !important; transition-duration:.01ms !important;}
   }
 
   .move-note{
@@ -211,20 +211,14 @@
     font-size:24px;color:var(--brass);
     background:radial-gradient(circle at 50% 50%, var(--moss) 28%, #16261c 30%);
   }
-  .music.playing{animation:spin 4s linear infinite;}
-  @keyframes spin{to{transform:rotate(360deg);}}
-  .music .state{
+  /* spin the artwork inside the button, not the button itself —
+     this avoids conflicts with the hover scale transform */
+  .music .art{
     position:absolute;inset:0;
-    display:flex;align-items:center;justify-content:center;
-    background:rgba(16,29,22,.45);
-    color:var(--bone);
-    font-size:20px;
-    opacity:1;
-    transition:opacity .2s;
     border-radius:50%;
   }
-  .music.playing .state{opacity:0;}
-  .music.playing:hover .state{opacity:1;}
+  .music.playing .art{animation:spin 4s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
 
 
   /* ---------- baby reveal ---------- */
@@ -489,9 +483,10 @@
      first click of the button (it spins while playing).
      ========================================================== -->
 <button class="music" id="musicBtn" aria-label="Play song">
-  <img id="musicImg" src="vinyl.png" alt="" style="display:none;">
-  <div class="disc-fallback" id="musicFallback">♪</div>
-  <div class="state" id="musicState">▶</div>
+  <div class="art">
+    <img id="musicImg" src="vinyl.png" alt="" style="display:none;">
+    <div class="disc-fallback" id="musicFallback">♪</div>
+  </div>
 </button>
 <audio id="song" src="song.mp3" loop preload="auto"></audio>
 
@@ -593,7 +588,6 @@
   const MUSIC = { track:'song.mp3', image:'vinyl.jpg' };   // ← edit filenames here if needed
   const song = document.getElementById('song');
   const musicBtn = document.getElementById('musicBtn');
-  const musicState = document.getElementById('musicState');
   song.src = MUSIC.track;
 
   (function(){
@@ -607,15 +601,13 @@
     if(song.paused){
       song.play().then(()=>{
         musicBtn.classList.add('playing');
-        musicState.textContent = '❚❚';
         musicBtn.setAttribute('aria-label','Pause song');
       }).catch(()=>{
-        musicState.textContent = '✕';   // file missing or blocked
+        console.warn('Song file missing or playback blocked');
       });
     } else {
       song.pause();
       musicBtn.classList.remove('playing');
-      musicState.textContent = '▶';
       musicBtn.setAttribute('aria-label','Play song');
     }
   });
