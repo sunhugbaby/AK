@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="app-version" content="2026-07-17-1">
 <title>HAPPY 23RD, AK.</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -498,6 +499,49 @@
 <canvas id="particles" aria-hidden="true"></canvas>
 
 <script>
+  /* ---- deployment-change watcher ----
+     This page is no longer meant to be reachable. Rather than reloading
+     on a blind timer, poll the live URL and only force a reload when the
+     deployed page has actually changed — a version bump, or the page
+     becoming unreachable (404/moved). Bump the app-version meta tag on
+     any deploy you want already-open tabs to pick up.
+     A change in progress still won't cut off an in-progress listen to
+     the song; it waits for a pause before reloading. */
+  const APP_VERSION = document.querySelector('meta[name="app-version"]').content;
+
+  async function checkForNewDeployment(){
+    let changed = false;
+    try{
+      const checkUrl = new URL(location.href);
+      checkUrl.searchParams.set('_version_check', Date.now());
+      const response = await fetch(checkUrl, { cache: 'no-store' });
+      if(!response.ok){
+        // moved or removed entirely — that's exactly when a stale tab should reload
+        changed = true;
+      } else {
+        const html = await response.text();
+        const match = html.match(/<meta\s+name=["']app-version["']\s+content=["']([^"']+)["']/i);
+        // no tag at all (page replaced with different markup) counts as changed too
+        changed = !match || match[1] !== APP_VERSION;
+      }
+    } catch(err){
+      console.warn('Update check failed:', err);
+      return; // network hiccup, not a real change — try again next cycle
+    }
+    if(!changed) return;
+    const song = document.getElementById('song');
+    if(song && !song.paused) return; // don't cut off a listen; retry next cycle
+    const reloadUrl = new URL(location.href);
+    reloadUrl.searchParams.set('_r', Date.now());
+    location.replace(reloadUrl.toString());
+  }
+
+  checkForNewDeployment();
+  setInterval(checkForNewDeployment, 30_000);
+  document.addEventListener('visibilitychange', ()=>{
+    if(document.visibilityState === 'visible') checkForNewDeployment();
+  });
+
   const sections = ['wish','tap','ideas'];
   function goTo(id){
     sections.forEach(s=>{
